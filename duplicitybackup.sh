@@ -35,10 +35,9 @@
 ## BASE CONFIG OPTIONS                                ##
 ## All details must be configured                     ##
 ########################################################
-FTP_USER=
-FTP_PASS=
-FTP_SERVER=
-GPG=
+FTP_USER=sdake
+FTP_PASSWORD=
+FTP_SERVER=192.168.1.200
 LOGFILE=/tmp/duplicity.log
 ########################################################
 
@@ -47,13 +46,13 @@ LOGFILE=/tmp/duplicity.log
 ## BASE CONFIG OPTIONAL OPTIONS                       ##
 ## Set EMAIL to recieve backup error reports          ##
 ########################################################
-EMAIL=
+EMAIL="steven.dake@gmail.com"
 
 ########################################################
 ## DUPLICITY BACKUP LOCTIONS                          ##
 ## Enter locations to backup / exclude                ##
 ## Multiple directories supported, space seperated    ##
-BACKUP_LOCATIONS="/home"
+BACKUP_LOCATIONS="/home /boot /etc /home /images /opt /root /srv /usr /var"
 BACKUP_EXCLUDES=""
 ########################################################
 
@@ -66,16 +65,14 @@ BACKUP_EXCLUDES=""
 ########################################################
 ## DUPLICITY VARS                                     ##
 ########################################################
-FTP_FOLDER=`hostname -f`_duplicity
-DUP_ARCHIVE=ftp://$FTP_USER@$FTP_SERVER/$FTP_FOLDER/
-export PASSPHRASE=$GPG FTP_PASSWORD=$FTP_PASS
+FTP_FOLDER=sdake_workstation_backup/`hostname -f`_duplicity
+DUP_ARCHIVE="ftp://$FTP_USER@$FTP_SERVER/$FTP_FOLDER/ --no-encryption"
 ########################################################
 
 # check if required options are set
 [ -z "$FTP_USER" ] && { echo "You must set your FTP username - set this in the BASE CONFIG section"; exit 1; }
-[ -z "$FTP_PASS" ] && { echo "You must set your FTP password - set this in the BASE CONFIG section"; exit 1; }
+[ -z "$FTP_PASSWORD" ] && { echo "You must set your FTP password - set this in the BASE CONFIG section"; exit 1; }
 [ -z "$FTP_SERVER" ] && { echo "You must set your FTP server - set this in the BASE CONFIG section"; exit 1; }
-[ -z "$GPG" ] && { echo "You must set your GPG passphrase - set this in the BASE CONFIG section"; exit 1; }
 [ -z "$LOGFILE" ] && { echo "You must set your LOGFILE locationi - set this in the BASE CONFIG section"; exit 1; }
 
 # check ncftp, duplicity  is installed
@@ -142,11 +139,9 @@ log() {
 # cleanup and empty exported vars
 empty() {
   export FTP_USER=
-  export FTP_PASS=
+  export FTP_PASSWORD=
   export FTP_SERVER=
-  export GPG=
   export DUP_ARCHIVE=
-  export PASSPHRASE=$GPG FTP_PASSWORD=$FTP_PASS  
 }
 
 # test ftp connection
